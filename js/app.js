@@ -5,12 +5,16 @@ const cards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o
     'fa-anchor', 'fa-anchor', 'fa-bolt', 'fa-bolt', 'fa-cube', 'fa-cube',
     'fa-leaf', 'fa-leaf', 'fa-bicycle', 'fa-bicycle', 'fa-bomb', 'fa-bomb'];
 
-let cardsToMatch = [], counter = 0;
+let cardsToMatch = [], counter = 0, timerTrigger = true, timerCounter = 0;
+let startTime = intervalID = null;
 
 document.querySelector('.restart').addEventListener('click', function () {
     if (event.target === document.querySelector('.js-fa-repeat')) {
-        console.log('click');
+        timerCounter = 0;
+        timerTrigger = true;
+        stopClock();
         shuffle(cards);
+        resetTimer();
     }
 });
 
@@ -48,12 +52,39 @@ function createCards(array) {
         listElement.className = 'card';
         fragment.appendChild(listElement);
     });
-    console.log(fragment);
+
     const deck = document.querySelector('.deck');
     while (deck.firstChild) {
         deck.removeChild(deck.firstChild);
     }
     deck.appendChild(fragment);
+}
+
+// function to print the time on th epage
+const timer = function() {
+    const timeEl = document.querySelector('.timer');
+    const difference = new Date().getTime() - startTime;
+
+    const sec = Math.floor((difference % (1000 * 60)) / 1000);
+    const min = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const hr = Math.floor((difference % (1000 * 60 * 60 * 60)) / (1000 * 60 * 60));
+
+    timeEl.textContent = (hr < 10 ? '0' + hr : hr) + ':' + (min < 10 ? '0' + min : min) + ':' + (sec < 10 ? '0' + sec : sec);
+};
+
+// function to start the clock
+function startClock() {
+    intervalID = setInterval(timer, 1000);
+}
+
+// function to stop the clock
+function stopClock() {
+    clearInterval(intervalID);
+}
+
+// function to reset timer to zero after hitting reset
+function resetTimer() {
+    document.querySelector('.timer').textContent = '00:00:00';
 }
 
 
@@ -71,9 +102,15 @@ function createCards(array) {
 // event listener for cards
 document.querySelector('.deck').addEventListener('click', function (event) {
 
+    // check for handling events on cards
     if (event.target.nodeName === 'LI') {
         const card = event.target;
         if (card.classList.length === 1) {
+            if (timerCounter === 0 && timerTrigger) {
+                timerCounter++;
+                startTime = new Date().getTime();
+                startClock();
+            }
             card.classList.add('open');
             card.classList.add('show');
             counter++;
@@ -83,16 +120,19 @@ document.querySelector('.deck').addEventListener('click', function (event) {
                 cardEl: card
             });
         }
-        console.log('classList', counter);
+
         if (counter === 2) {
+            // dom manipulation for card match
             if (cardsToMatch[0].className === cardsToMatch[1].className) {
                 // remove the css classes 'open' and 'show'
                 cardsToMatch.forEach(function (cardObj) {
                     cardObj.cardEl.classList.remove('open');
                     cardObj.cardEl.classList.remove('show');
                     cardObj.cardEl.classList.add('match');
-                    console.log('classList', cardObj.cardEl.classList);
                 });
+                timerCounter += 2;
+
+                // dom manipulation for card mismatch
             } else {
                 cardsToMatch.forEach(function (cardObj) {
                     cardObj.cardEl.classList.add('incorrect');
@@ -105,6 +145,13 @@ document.querySelector('.deck').addEventListener('click', function (event) {
             }
             counter = 0;
             cardsToMatch.length = 0;
+        }
+
+        // stop the timer
+        if (timerCounter > 16 && timerTrigger) {
+            timerTrigger = false;
+            stopClock();
+            console.log('called', timerCounter);
         }
     }
 });
