@@ -155,7 +155,7 @@ document.querySelector('.deck').addEventListener('click', function (event) {
                         cardObj.cardEl.classList.remove('open');
                         cardObj.cardEl.classList.remove('show');
                         cardObj.cardEl.classList.remove('incorrect');
-                    }, 500);
+                    }, 1000);
                 });
             }
             counter = 0;
