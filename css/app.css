@@ -63,12 +63,36 @@ h1 {
     justify-content: center;
     align-items: center;
     box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+    transition: transform 0.2s;
+}
+
+.deck .card:hover {
+    transform: scale(1.1);
 }
 
 .deck .card.open {
     transform: rotateY(0);
     background: #02b3e4;
     cursor: default;
+    animation: cardClickAnimation 1s;
+}
+
+@keyframes cardClickAnimation {
+    0% {
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(0.8);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .deck .card.show {
@@ -79,12 +103,64 @@ h1 {
     cursor: default;
     background: #02ccba;
     font-size: 33px;
+    animation: cardMatch 0.5s ease-in;
 }
+
+@keyframes cardMatch {
+    0% {
+        transform: translate(0px, 0px);
+    }
+
+    25% {
+        transform: translate(-15px, 10px);
+    }
+
+    50% {
+        transform: translate(10px, -5px);
+    }
+
+    75% {
+        transform: translate(-5px, -4px);
+    }
+
+    87.5% {
+        transform: translate(2.5px, 2.5px);
+    }
+
+    100% {
+        transform: translate(0px, 0px);
+    }
+}
+
+@keyframes cardMismatch {
+    0% {
+        transform: translate(0px, 0px);
+    }
+
+    25% {
+        transform: translate(-15px, 10px);
+    }
+
+    50% {
+        transform: translate(10px, -5px);
+    }
+
+    75% {
+        transform: translate(-5px, 2.5px);
+    }
+
+    100% {
+        transform: translate(0px, 0px);
+    }
+}
+
+
 
 .deck .card.incorrect {
     cursor: default;
     background: #cc023f;
     font-size: 33px;
+    animation: cardMismatch 0.5s ease-in;
 }
 
 /*
