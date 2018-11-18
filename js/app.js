@@ -7,7 +7,7 @@ const cards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o
 
 let cardsToMatch = [], timerTrigger = true, counter = timerCounter = moves = 0;
 let startTime = intervalID = null;
-let starRating = 3;
+let starRating = 3, totalTimeInSec = 0;
 
 
 document.querySelector('.restart').addEventListener('click', function () {
@@ -16,6 +16,7 @@ document.querySelector('.restart').addEventListener('click', function () {
         timerTrigger = true;
         stopClock();
         shuffle(cards);
+        resetStars();
         resetTimer();
         resetMoves();
     }
@@ -72,8 +73,37 @@ const timer = function() {
     const min = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
     const hr = Math.floor((difference % (1000 * 60 * 60 * 60)) / (1000 * 60 * 60));
 
+    totalTimeInSec = Math.floor(difference / 1000);
+    if (totalTimeInSec > 6 && moves > 6 && starRating === 3) {
+        starRating--;
+        reduceStars();
+    } else if (totalTimeInSec > 18 && moves > 12 && starRating === 2) {
+        starRating--;
+        reduceStars();
+    }
+
     timeEl.textContent = (hr < 10 ? '0' + hr : hr) + ':' + (min < 10 ? '0' + min : min) + ':' + (sec < 10 ? '0' + sec : sec);
 };
+
+// function to remove stars
+function reduceStars() {
+    document.querySelector('.stars li').remove();
+}
+
+// function to remove stars
+function resetStars() {
+    starRating = 3;
+    const fragment = document.createDocumentFragment();
+    for (let i = 1; i < starRating; i++) {
+        const iconEl = document.createElement('i');
+        iconEl.classList.add('fa');
+        iconEl.classList.add('fa-star');
+        const listEl = document.createElement('li');
+        listEl.appendChild(iconEl);
+        fragment.appendChild(listEl);
+    }
+    document.querySelector('.stars').appendChild(fragment);
+}
 
 // function to start the clock
 function startClock() {
