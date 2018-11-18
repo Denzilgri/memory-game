@@ -5,8 +5,10 @@ const cards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o
     'fa-anchor', 'fa-anchor', 'fa-bolt', 'fa-bolt', 'fa-cube', 'fa-cube',
     'fa-leaf', 'fa-leaf', 'fa-bicycle', 'fa-bicycle', 'fa-bomb', 'fa-bomb'];
 
-let cardsToMatch = [], counter = 0, timerTrigger = true, timerCounter = 0;
+let cardsToMatch = [], timerTrigger = true, counter = timerCounter = moves = 0;
 let startTime = intervalID = null;
+let starRating = 3;
+
 
 document.querySelector('.restart').addEventListener('click', function () {
     if (event.target === document.querySelector('.js-fa-repeat')) {
@@ -15,6 +17,7 @@ document.querySelector('.restart').addEventListener('click', function () {
         stopClock();
         shuffle(cards);
         resetTimer();
+        resetMoves();
     }
 });
 
@@ -87,6 +90,17 @@ function resetTimer() {
     document.querySelector('.timer').textContent = '00:00:00';
 }
 
+// count moves
+function incrementMoves() {
+    moves++;
+    document.querySelector('.moves').textContent = moves === 1 ? moves + ' Move' : moves + ' Moves';
+}
+
+// count moves
+function resetMoves() {
+    moves = 0;
+    document.querySelector('.moves').textContent = '0 Moves';
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -105,6 +119,7 @@ document.querySelector('.deck').addEventListener('click', function (event) {
     // check for handling events on cards
     if (event.target.nodeName === 'LI') {
         const card = event.target;
+        incrementMoves();
         if (card.classList.length === 1) {
             if (timerCounter === 0 && timerTrigger) {
                 timerCounter++;
