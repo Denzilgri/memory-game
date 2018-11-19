@@ -135,6 +135,75 @@ h1 {
 }
 
 /*
+ * styles for the result panel
+ */
+
+.results-modal {
+    display: none;
+    height: 100vh;
+    width: 100vw;
+    opacity: 0.95;
+    background-color: #fff;
+    position: fixed;
+    top: 0;
+}
+
+.results-container {
+    margin: 0 auto;
+    min-width: 360px;
+    max-width: 800px;
+    text-align: center;
+    padding-top: 25vh;
+}
+
+.heading-results {
+    width: 100%;
+}
+
+.report-card {
+    width: 100%;
+}
+
+.report-table {
+    border: none;
+    outline: #003a70;
+    width: 270px;
+    margin: 0px auto 30px;
+}
+
+.report-table td,
+.report-table th {
+    width: 33.33%;
+    font-size: 17px;
+    text-align: center;
+    font-weight: 400;
+}
+
+.check .fa-check-circle {
+    font-size: 50px;
+    color: #bcf002;
+    opacity: 1;
+}
+
+.congrats-msg {
+    color: #003a70;
+    font-size: 30px;
+}
+
+.restart-game {
+    font-size: 16px;
+    width: 120px;
+    height: 50px;
+    background-color: #003a70;
+    color: #fff;
+    border: none;
+    box-shadow: 0px 0px 5px 2px rgba(87, 86, 86, 0.5);
+    border-radius: 5px;
+    letter-spacing: 1.3px;
+    cursor: pointer;
+}
+
+/*
  * Animations for cards
  */
  @keyframes cardClickAnimation {

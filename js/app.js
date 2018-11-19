@@ -7,18 +7,12 @@ const cards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o
 
 let cardsToMatch = [], timerTrigger = true, counter = timerCounter = moves = 0;
 let startTime = intervalID = null;
-let starRating = 3, totalTimeInSec = 0;
+let starRating = 3, totalTime = '00:00:00';
 
-
+// event listener for reset button
 document.querySelector('.restart').addEventListener('click', function () {
     if (event.target === document.querySelector('.js-fa-repeat')) {
-        timerCounter = 0;
-        timerTrigger = true;
-        stopClock();
-        shuffle(cards);
-        resetStars();
-        resetTimer();
-        resetMoves();
+        resetGame();
     }
 });
 
@@ -65,7 +59,7 @@ function createCards(array) {
 }
 
 // function to print the time on th epage
-const timer = function() {
+const timer = function () {
     const timeEl = document.querySelector('.timer');
     const difference = new Date().getTime() - startTime;
 
@@ -73,7 +67,7 @@ const timer = function() {
     const min = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
     const hr = Math.floor((difference % (1000 * 60 * 60 * 60)) / (1000 * 60 * 60));
 
-    totalTimeInSec = Math.floor(difference / 1000);
+    let totalTimeInSec = Math.floor(difference / 1000);
     if (totalTimeInSec > 6 && moves > 6 && starRating === 3) {
         starRating--;
         reduceStars();
@@ -82,7 +76,8 @@ const timer = function() {
         reduceStars();
     }
 
-    timeEl.textContent = (hr < 10 ? '0' + hr : hr) + ':' + (min < 10 ? '0' + min : min) + ':' + (sec < 10 ? '0' + sec : sec);
+    totalTime = (hr < 10 ? '0' + hr : hr) + ':' + (min < 10 ? '0' + min : min) + ':' + (sec < 10 ? '0' + sec : sec);
+    timeEl.textContent = totalTime;
 };
 
 // function to remove stars
@@ -94,7 +89,7 @@ function reduceStars() {
 function resetStars() {
     starRating = 3;
     const fragment = document.createDocumentFragment();
-    for (let i = 1; i < starRating; i++) {
+    for (let i = 0; i < starRating; i++) {
         const iconEl = document.createElement('i');
         iconEl.classList.add('fa');
         iconEl.classList.add('fa-star');
@@ -102,7 +97,12 @@ function resetStars() {
         listEl.appendChild(iconEl);
         fragment.appendChild(listEl);
     }
-    document.querySelector('.stars').appendChild(fragment);
+
+    const starBlock = document.querySelector('.stars');
+    while (starBlock.firstChild) {
+        starBlock.removeChild(starBlock.firstChild);
+    }
+    starBlock.appendChild(fragment);
 }
 
 // function to start the clock
@@ -132,6 +132,37 @@ function resetMoves() {
     document.querySelector('.moves').textContent = '0 Moves';
 }
 
+// reset game
+function resetGame() {
+    timerCounter = 0;
+    timerTrigger = true;
+    stopClock();
+    shuffle(cards);
+    resetStars();
+    resetTimer();
+    resetMoves();
+}
+
+// fucntion to display game results
+function displayResults() {
+
+    const resultsElement = document.querySelector('.results');
+    const fragment = document.createDocumentFragment();
+    const list = [moves, totalTime, starRating];
+    for (let i = 0; i < 3; i++) {
+        const cell = document.createElement('td');
+        cell.textContent = list[i];
+        fragment.appendChild(cell);
+    }
+
+    while (resultsElement.firstChild) {
+        resultsElement.removeChild(resultsElement.firstChild);
+    }
+    resultsElement.appendChild(fragment);
+    document.querySelector('.results-modal').style.display = 'block';
+
+}
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -159,7 +190,7 @@ document.querySelector('.deck').addEventListener('click', function (event) {
             card.classList.add('open');
             card.classList.add('show');
             counter++;
-            
+
             cardsToMatch.push({
                 className: card.children[0].classList[1],
                 cardEl: card
@@ -181,7 +212,7 @@ document.querySelector('.deck').addEventListener('click', function (event) {
             } else {
                 cardsToMatch.forEach(function (cardObj) {
                     cardObj.cardEl.classList.add('incorrect');
-                    setTimeout(function() {
+                    setTimeout(function () {
                         cardObj.cardEl.classList.remove('open');
                         cardObj.cardEl.classList.remove('show');
                         cardObj.cardEl.classList.remove('incorrect');
@@ -196,9 +227,15 @@ document.querySelector('.deck').addEventListener('click', function (event) {
         if (timerCounter > 16 && timerTrigger) {
             timerTrigger = false;
             stopClock();
-            console.log('called', timerCounter);
+            displayResults();
         }
     }
+});
+
+// event handler for restart button in the modal
+document.querySelector('.restart-game').addEventListener('click', function () {
+    resetGame();
+    document.querySelector('.results-modal').style.display = 'none';
 });
 
 shuffle(cards);

@@ -79,17 +79,27 @@
             </li>
         </ul>
     </div>
-    <section>
-        <article>
-            <header>
-                <div><i class="fa fa-check-circle" aria-hidden="true"></i></div>
-                <h1>Congratulations!!! You've completed the game!</h1>
+    <section class="results-modal">
+        <article class="results-container">
+            <header class="heading-results">
+                <div class="check"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+                <h1 class="congrats-msg">Congratulations!!! You've completed the game!</h1>
             </header>
-            <section>
-                <p>Score: </p>
-                <p>Time: </p>
-                <p>Star: </p>
-                <button>Restart</button>
+            <section class="report-card">
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Moves</th>
+                            <th>Time</th>
+                            <th>Star Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="results">
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="restart-game">Restart</button>
             </section>
         </article>
     </section>
