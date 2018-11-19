@@ -68,10 +68,10 @@ const timer = function () {
     const hr = Math.floor((difference % (1000 * 60 * 60 * 60)) / (1000 * 60 * 60));
 
     let totalTimeInSec = Math.floor(difference / 1000);
-    if (totalTimeInSec > 6 && moves > 6 && starRating === 3) {
+    if (totalTimeInSec > 60 && moves > 32 && starRating === 3) {
         starRating--;
         reduceStars();
-    } else if (totalTimeInSec > 18 && moves > 12 && starRating === 2) {
+    } else if (totalTimeInSec > 75 && moves > 84 && starRating === 2) {
         starRating--;
         reduceStars();
     }
